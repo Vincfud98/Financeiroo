@@ -4,20 +4,18 @@ Este projeto usa HTML, CSS e JavaScript sem framework ou etapa de build.
 
 ## Arquivos principais
 
-- Edite `index.html`, `styles.css`, `app.js` e `firebase-sync.js` na raiz.
-- Antes de publicar, copie esses quatro arquivos para `public/`.
-- Preserve a compatibilidade com dados existentes no `localStorage` e no Firestore.
+- Edite `index.html`, `styles.css` e `app.js` na raiz.
+- Antes de publicar, copie esses tres arquivos para `public/`.
+- Preserve a compatibilidade com dados existentes no `localStorage`.
 
-## Dados e seguranca
+## Dados
 
-- A base compartilhada fica abaixo de `families/shared` no Firestore.
-- Nao remova a lista de e-mails autorizados sem solicitacao expressa.
-- Nunca versione `.firebase-session`, caches, logs ou tokens.
-- O Firebase Web Config presente no frontend identifica o projeto e nao e uma credencial administrativa.
+- Os dados financeiros ficam no `localStorage` de cada navegador.
+- O repositorio GitHub compartilha somente o codigo.
+- Nao introduza backend, login ou sincronizacao remota sem solicitacao expressa.
 
 ## Validacao
 
-- Execute verificacao de sintaxe em `app.js` e `firebase-sync.js`.
-- Teste login autorizado, bloqueio de terceiros, migracao local e sincronizacao.
+- Execute verificacao de sintaxe em `app.js`.
+- Teste carregamento, persistencia local e os fluxos de edicao.
 - Confira parcelas, recorrencias, metas, Reserva e filtros mensais depois de alterar regras financeiras.
-

@@ -1,19 +1,17 @@
 # Financa Pessoal
 
-Aplicativo web de financas pessoais feito em HTML, CSS e JavaScript, com Firebase Authentication, Cloud Firestore e Firebase Hosting.
+Aplicativo web de financas pessoais feito em HTML, CSS e JavaScript.
 
 ## Estrutura
 
 - `index.html`: interface das sete abas.
 - `styles.css`: estilos, responsividade e modo escuro.
-- `app.js`: regras financeiras, graficos e interacoes.
-- `firebase-sync.js`: login Google, migracao local e sincronizacao com Firestore.
-- `firestore.rules`: acesso restrito aos dois e-mails autorizados.
-- `public/`: arquivos enviados ao Firebase Hosting.
+- `app.js`: regras financeiras, graficos, persistencia e interacoes.
+- `public/`: copia dos arquivos necessarios para hospedagem estatica.
 
 ## Execucao local
 
-Abra um servidor HTTP na raiz do projeto. Exemplo:
+Abra um servidor HTTP na raiz do projeto:
 
 ```powershell
 python -m http.server 8000 --bind 127.0.0.1
@@ -21,24 +19,10 @@ python -m http.server 8000 --bind 127.0.0.1
 
 Acesse `http://127.0.0.1:8000/index.html`.
 
-## Firebase
+## Armazenamento
 
-Projeto configurado: `financeiro-cccab`.
-
-Antes do deploy:
-
-1. Ative o provedor Google no Firebase Authentication.
-2. Crie o banco Cloud Firestore.
-3. Confirme os dominios autorizados.
-
-Para publicar:
-
-```powershell
-firebase deploy --project financeiro-cccab
-```
-
-Arquivos de credenciais, caches e logs locais estão protegidos pelo `.gitignore`.
+Os dados financeiros ficam no `localStorage` do navegador. O GitHub compartilha apenas o codigo; cada computador possui sua propria base local.
 
 ## Colaboracao
 
-Veja [CONTRIBUTING.md](CONTRIBUTING.md) para configurar outro computador e trabalhar no projeto com o Codex sem sobrescrever alteracoes.
+Veja [CONTRIBUTING.md](CONTRIBUTING.md) para configurar outro computador e trabalhar no projeto sem sobrescrever alteracoes.

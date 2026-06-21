@@ -1,14 +1,3 @@
-# Firebase credentials and local tooling
-.firebase-session/
-.firebase-cli/
-.firebase-tools-local/
-.npm-cache-local/
-.firebase/
-.github-repo/
-firebase-debug.log*
-firebase-deploy.log
-firebase-deploy.status
-
 # Dependencies and local environment
 node_modules/
 .env

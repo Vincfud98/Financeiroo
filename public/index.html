@@ -7,17 +7,6 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="auth-gate" id="authGate">
-      <div class="auth-card">
-        <span class="auth-brand">F</span>
-        <p class="eyebrow">Financa Pessoal</p>
-        <h1>Acesso familiar</h1>
-        <p>Entre com a conta Google autorizada para acessar e sincronizar os dados financeiros.</p>
-        <button class="primary-btn auth-login-button" id="googleLoginButton" type="button">Entrar com Google</button>
-        <span class="auth-message" id="authMessage">Conectando ao Firebase...</span>
-      </div>
-    </div>
-
     <div class="app-shell">
       <aside class="sidebar" aria-label="Abas da planilha">
         <div class="brand">
@@ -38,16 +27,10 @@
             <h1 id="pageTitle">Dashboard Geral</h1>
           </div>
           <div class="top-actions">
-            <div class="user-session" id="userSession" hidden>
-              <span id="userEmail"></span>
-              <button class="ghost-btn" id="logoutButton" type="button">Sair</button>
-            </div>
             <button class="theme-btn" id="themeToggle" type="button" aria-pressed="false" title="Ativar modo escuro">
               <span class="theme-icon" aria-hidden="true">&#9790;</span>
               <span id="themeLabel">Modo escuro</span>
             </button>
-            <button class="ghost-btn" id="exportBtn" type="button">Exportar JSON</button>
-            <button class="primary-btn" id="resetBtn" type="button">Restaurar exemplo</button>
           </div>
         </header>
 
@@ -818,9 +801,5 @@
     </dialog>
 
     <script src="app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <script src="firebase-sync.js"></script>
   </body>
 </html>

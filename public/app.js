@@ -255,7 +255,6 @@ function ensureRecurringSeries(loaded) {
 
 function saveData() {
   localStorage.setItem(storageKey, JSON.stringify(data));
-  window.firebaseSync?.scheduleSave();
 }
 
 function money(value) {
@@ -1536,27 +1535,6 @@ document.querySelector("#editTransactionForm").addEventListener("submit", (event
   renderAll();
 });
 
-document.querySelector("#resetBtn").addEventListener("click", () => {
-  data = structuredClone(sampleData);
-  data.goalMovements ||= [];
-  data.wishlist ||= [];
-  ensureFixedReserveGoal(data);
-  const resetAnchor = Object.entries(data.monthlyPlans)
-    .find(([, plan]) => Number(plan.previousRemainder) !== 0);
-  data.reserveAnchor = resetAnchor
-    ? { month: resetAnchor[0], amount: Number(resetAnchor[1].previousRemainder) }
-    : { month: `${year}-${month}`, amount: 0 };
-  normalizeTransactions(data.transactions);
-  selectedMonthKey = `${year}-${month}`;
-  activeTransactionMonth = `${year}-${month}`;
-  selectedBankMonth = `${year}-${month}`;
-  selectedPlanningMonth = `${year}-${month}`;
-  selectedAnnualYear = year;
-  saveData();
-  renderAll();
-  switchTab("dashboard");
-});
-
 document.querySelector("#dashboardMonth").addEventListener("change", (event) => {
   selectedMonthKey = event.target.value || `${year}-${month}`;
   renderDashboard();
@@ -1757,16 +1735,6 @@ document.addEventListener("change", (event) => {
   renderAll();
 });
 
-document.querySelector("#exportBtn").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `financas-${year}.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-});
-
 document.querySelector("#transactionForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const form = event.currentTarget;
@@ -1838,16 +1806,3 @@ renderAll();
 applyWishlistState();
 applyTheme();
 switchTab("dashboard");
-
-window.financeApp = {
-  getData() {
-    return structuredClone(data);
-  },
-  applyRemoteData(remoteData) {
-    data = normalizeLoadedData(structuredClone(remoteData));
-    renderAll();
-  },
-  getLocalStorageKey() {
-    return storageKey;
-  },
-};

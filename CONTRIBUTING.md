@@ -40,8 +40,6 @@ Abra um Pull Request no GitHub para revisar e juntar a branch na `main`.
 
 - Sempre execute `git pull` antes de começar.
 - Evite editar a mesma funcionalidade simultaneamente em duas branches.
-- Nunca envie tokens, senhas, arquivos `.env` ou a pasta `.firebase-session`.
-- O Firebase Web Config no frontend pode ser versionado; ele não concede acesso administrativo.
-- Alteracoes em `firestore.rules` afetam o acesso aos dados e devem ser revisadas antes do deploy.
-- Ao alterar os arquivos principais, mantenha `public/` sincronizada com `index.html`, `styles.css`, `app.js` e `firebase-sync.js`.
-
+- Nunca envie tokens, senhas ou arquivos `.env`.
+- Os dados financeiros sao locais e nao sao enviados ao GitHub.
+- Ao alterar os arquivos principais, mantenha `public/` sincronizada com `index.html`, `styles.css` e `app.js`.
