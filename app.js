@@ -974,7 +974,7 @@ function renderAccounts() {
   banks.forEach((bank) => {
     const card = document.querySelector(`[data-bank-card="${bank.key}"]`);
     const cycle = getBankCycleDates(bank.key, selectedBankMonth);
-    card.querySelector("[data-bank-balance]").textContent = "Fatura  " + money(bank.expense);
+    card.querySelector("[data-bank-balance]").textContent = money(bank.expense);
     card.querySelector("[data-bank-closing-date]").textContent = dateBR(cycle.closingDate);
     card.querySelector("[data-bank-due-date]").textContent = dateBR(cycle.dueDate);
     const statusSelect = document.querySelector(`[data-bank-invoice-status="${bank.key}"]`);
