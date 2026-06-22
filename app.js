@@ -100,6 +100,7 @@ let selectedPlanningMonth = `${year}-${month}`;
 let selectedAnnualYear = year;
 let wishlistCollapsed = localStorage.getItem("wishlist-collapsed") === "true";
 let darkModeEnabled = localStorage.getItem("dark-mode") === "true";
+let sidebarCollapsed = localStorage.getItem("sidebar-collapsed") === "true";
 
 function loadData() {
   const saved = localStorage.getItem(storageKey);
@@ -365,7 +366,7 @@ function getBankSummary(bankName, monthKey) {
 function renderTabs() {
   const container = document.querySelector("#tabs");
   container.innerHTML = tabs
-    .map(([id, label, icon]) => `<button class="tab-btn ${id === "dashboard" ? "is-active" : ""}" data-tab="${id}" data-icon="${icon}" type="button">${label}</button>`)
+    .map(([id, label, icon]) => `<button class="tab-btn ${id === "dashboard" ? "is-active" : ""}" data-tab="${id}" data-icon="${icon}" type="button" title="${label}" aria-label="${label}"><span>${label}</span></button>`)
     .join("");
 }
 
@@ -962,6 +963,17 @@ function applyTheme() {
   icon.textContent = darkModeEnabled ? "\u2600" : "\u263e";
   label.textContent = darkModeEnabled ? "Modo claro" : "Modo escuro";
   button.title = darkModeEnabled ? "Ativar modo claro" : "Ativar modo escuro";
+}
+
+function applySidebarState() {
+  const shell = document.querySelector(".app-shell");
+  const button = document.querySelector("#sidebarToggle");
+  const collapsed = window.matchMedia("(min-width: 1121px)").matches && sidebarCollapsed;
+  shell.classList.toggle("sidebar-is-collapsed", collapsed);
+  button.querySelector("span").textContent = collapsed ? "\u203a" : "\u2039";
+  button.setAttribute("aria-expanded", String(!collapsed));
+  button.setAttribute("aria-label", collapsed ? "Expandir menu lateral" : "Recolher menu lateral");
+  button.title = collapsed ? "Expandir menu lateral" : "Recolher menu lateral";
 }
 
 function renderBudget() {
@@ -1608,6 +1620,14 @@ document.querySelector("#themeToggle").addEventListener("click", () => {
   applyTheme();
 });
 
+document.querySelector("#sidebarToggle").addEventListener("click", () => {
+  sidebarCollapsed = !sidebarCollapsed;
+  localStorage.setItem("sidebar-collapsed", String(sidebarCollapsed));
+  applySidebarState();
+});
+
+window.addEventListener("resize", applySidebarState);
+
 document.querySelector("#goalMovementForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const form = event.currentTarget;
@@ -1883,4 +1903,5 @@ document.querySelector("#goalMovementDate").value = localDateKey();
 renderAll();
 applyWishlistState();
 applyTheme();
+applySidebarState();
 switchTab("dashboard");
