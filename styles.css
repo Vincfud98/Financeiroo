@@ -2080,10 +2080,7 @@ tbody tr:hover {
 }
 
 .bank-menu-button {
-  position: absolute;
-  z-index: 3;
-  top: 30px;
-  right: 30px;
+  position: static;
   display: grid;
   place-items: center;
   width: 32px;
@@ -2095,6 +2092,8 @@ tbody tr:hover {
   background: transparent;
   font-size: 1.35rem;
   font-weight: 900;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .bank-menu-button:hover,
@@ -2129,45 +2128,80 @@ tbody tr:hover {
 }
 
 .bank-card-logo {
-  display: block;
-  height: 48px;
-}
-
-.bank-card-logo svg {
-  height: 48px;
-  width: auto;
-}
-
-.bank-card-number {
   display: none;
 }
 
-.bank-card-owner {
-  display: none;
+.bank-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.bank-card-info {
+.bank-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.bank-card-title {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  flex: 1;
+}
+
+.bank-card-title small {
+  font-size: 0.72rem;
+  opacity: 0.7;
+}
+
+.bank-card-title strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.bank-card-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   margin-top: auto;
 }
 
-.bank-card-info-item {
+.bank-card-balance small {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.bank-card-balance strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.bank-card-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.bank-card-date-item {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.bank-card-info-item small {
+.bank-card-date-item small {
   font-size: 0.7rem;
-  opacity: 0.75;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  opacity: 0.7;
 }
 
-.bank-card-info-item strong {
-  font-size: 1rem;
+.bank-card-date-item strong {
+  font-size: 0.95rem;
   font-weight: 700;
 }
 
