@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="green_primary">#123D33</color>
+    <color name="green_secondary">#1F5F4F</color>
+    <color name="white">#FFFFFF</color>
+    <string name="app_name">Finança Pessoal</string>
+    <style name="Theme.FinancaPessoal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#123D33</item>
+        <item name="colorPrimaryVariant">#1F5F4F</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:statusBarColor">#123D33</item>
+        <item name="android:navigationBarColor">#123D33</item>
+    </style>
+</resources>
