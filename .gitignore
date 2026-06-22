@@ -1,0 +1,17 @@
+# Dependencies and local environment
+node_modules/
+.env
+.env.*
+Financeiro/
+
+# Generated previews and system files
+preview-dashboard.png
+filter-preview.png
+third-party-preview.png
+form-defaults-preview.png
+table-columns-preview.png
+sidebar-collapsed-preview.png
+bank-cycle-preview.png
+financa-pessoal-source.zip
+Thumbs.db
+.DS_Store
