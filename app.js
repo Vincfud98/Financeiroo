@@ -455,6 +455,15 @@ function renderDashboard() {
   document.querySelector("#summaryForecast").textContent = money(forecast);
   document.querySelector("#summaryForecast").className = forecast < 0 ? "negative" : "positive";
 
+  const cardIncome = document.querySelector("#cardIncome");
+  const cardExpense = document.querySelector("#cardExpense");
+  const cardBalance = document.querySelector("#cardBalance");
+  const cardForecast = document.querySelector("#cardForecast");
+  if (cardIncome) cardIncome.textContent = money(plannedIncome);
+  if (cardExpense) { cardExpense.textContent = money(expense); cardExpense.className = "negative"; }
+  if (cardBalance) { cardBalance.textContent = money(currentBalance); cardBalance.className = currentBalance < 0 ? "negative" : "positive"; }
+  if (cardForecast) { cardForecast.textContent = money(forecast); cardForecast.className = forecast < 0 ? "negative" : "positive"; }
+
   renderFlowChart();
   renderExpensePie(expenses, "category", "#categoryPie", "#categoryLegend");
   renderExpensePie(expenses, "payment", "#paymentPie", "#paymentLegend");
@@ -1358,10 +1367,16 @@ function renderDashboardPatrimony() {
 
   document.querySelector("#dashboardPatrimonyChart").innerHTML = `
     <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Evolução do saldo acumulado">
+      <defs>
+        <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>
       <line class="grid-line" x1="${paddingX}" y1="${paddingY}" x2="${paddingX}" y2="${height - paddingY}"></line>
       <line class="grid-line" x1="${paddingX}" y1="${height - paddingY}" x2="${width - paddingX}" y2="${height - paddingY}"></line>
       <line class="grid-line" x1="${paddingX}" y1="${zeroY}" x2="${width - paddingX}" y2="${zeroY}"></line>
-      <polygon class="balance-area" points="${areaPoints}"></polygon>
+      <polygon class="balance-area" points="${areaPoints}" fill="url(#lineGrad)"></polygon>
       <polyline class="balance-line" points="${pointString}"></polyline>
       ${points.map((p) => `
         <circle class="balance-point" cx="${p.x}" cy="${p.y}" r="4">
