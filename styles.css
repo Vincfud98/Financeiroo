@@ -2067,22 +2067,22 @@ tbody tr:hover {
 
 .bank-card {
   position: relative;
-  aspect-ratio: 1.586 / 1;
-  overflow: hidden;
-  padding: 24px 28px;
-  border-radius: 16px;
-  color: #fff;
-  box-shadow: 3px 3px 17px 0px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  aspect-ratio: 1.5 / 1;
+  border-radius: 20px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 3px 3px 17px 0px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 }
 
 .bank-menu-button {
   position: absolute;
   z-index: 3;
-  top: 16px;
-  right: 16px;
+  top: 30px;
+  right: 30px;
   display: grid;
   place-items: center;
   width: 32px;
@@ -2098,7 +2098,7 @@ tbody tr:hover {
 
 .bank-menu-button:hover,
 .bank-menu-button.is-active {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .bank-card::after {
@@ -2106,122 +2106,55 @@ tbody tr:hover {
   position: absolute;
   right: -30px;
   bottom: -50px;
-  width: 160px;
-  height: 160px;
-  border: 30px solid rgba(255, 255, 255, 0.08);
+  width: 140px;
+  height: 140px;
+  border: 28px solid rgba(0, 0, 0, 0.04);
   border-radius: 50%;
 }
 
 .bank-assai {
-  color: #fff;
-  background: radial-gradient(circle at 20% 30%, #e8b830 0%, #c49020 100%);
+  color: #5a4500;
+  background: radial-gradient(circle, #fff8e1 0%, #ffe082 100%);
 }
 
 .bank-inter {
-  background: radial-gradient(circle at 20% 30%, #ff7a2e 0%, #d45a10 100%);
+  color: #7c2d00;
+  background: radial-gradient(circle, #fff3e0 0%, #ffcc80 100%);
 }
 
 .bank-nubank {
-  background: radial-gradient(circle at 20% 30%, #9b30ff 0%, #6b1fa0 100%);
+  color: #3a0066;
+  background: radial-gradient(circle, #f3e5f5 0%, #ce93d8 100%);
 }
 
-.bank-card-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-  z-index: 1;
-}
-
-.bank-card-head p,
-.bank-card-head h2 {
-  margin: 0;
-}
-
-.bank-card-head p {
-  opacity: 0.7;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.bank-card-balance span {
-  opacity: 0.7;
-  font-size: 0.68rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.bank-card-head h2 {
-  margin-top: 2px;
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.bank-monogram {
-  display: none;
-}
-
-.bank-logo {
+.bank-card-logo {
   display: block;
-  height: 28px;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  opacity: 0.9;
 }
 
-.bank-logo svg {
-  height: 28px;
-  width: auto;
+.bank-card-number {
+  display: block;
+  font-size: 0.95rem;
+  letter-spacing: 4px;
+  opacity: 0.9;
 }
 
-.bank-card-chip {
-  width: 40px;
-  height: 30px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #e8c547 0%, #d4a82c 50%, #c9973a 100%);
+.bank-card-owner {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
   opacity: 0.85;
-  margin: 4px 0;
 }
 
-.bank-card-chip + .bank-card-balance {
-  position: relative;
-  z-index: 1;
+.bank-card-owner strong {
+  font-weight: 700;
 }
 
-.bank-card-balance {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-}
 
-.bank-card-dates {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 0;
-}
 
-.bank-card-dates span,
-.bank-card-dates strong {
-  display: block;
-}
-
-.bank-card-dates span {
-  min-height: auto;
-  opacity: 0.65;
-  font-size: 0.62rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.bank-card-dates strong {
-  margin-top: 2px;
-  font-size: 0.82rem;
-}
 
 .bank-invoice-status {
   display: grid;
@@ -2263,16 +2196,6 @@ tbody tr:hover {
   width: min(560px, calc(100vw - 32px));
 }
 
-.bank-card-balance span,
-.bank-card-balance strong {
-  display: block;
-}
-
-.bank-card-balance strong {
-  margin-top: 4px;
-  font-size: 1.5rem;
-  letter-spacing: -0.01em;
-}
 
 .bank-expense-details {
   overflow: hidden;
