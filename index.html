@@ -233,6 +233,10 @@
                 <span>Descreva a categoria</span>
                 <input name="otherCategory" id="otherCategoryInput" placeholder="Ex.: Curso" />
               </label>
+              <label class="conditional-entry-field is-hidden" id="dueDateField">
+                <span>Data de vencimento</span>
+                <input type="date" name="dueDate" id="dueDateInput" disabled />
+              </label>
               <label>
                 <span>Valor total</span>
                 <input type="number" name="amount" min="0.01" step="0.01" placeholder="R$ 0,00" required />
@@ -775,6 +779,10 @@
           <label>
             <span>Categoria</span>
             <input name="category" required />
+          </label>
+          <label class="conditional-entry-field is-hidden" id="editDueDateField">
+            <span>Data de vencimento</span>
+            <input type="date" name="dueDate" id="editDueDateInput" disabled />
           </label>
           <label>
             <span>Valor</span>

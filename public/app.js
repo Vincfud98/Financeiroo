@@ -185,6 +185,7 @@ function normalizeTransactions(transactions) {
     item.recurring ||= "Nao";
     item.thirdParty ||= "Nao";
     item.thirdPartyName ||= "";
+    item.dueDate ||= "";
     item.recurringGroupId ||= item.recurring === "Sim" ? item.installmentGroupId || null : null;
   });
 }
@@ -213,6 +214,7 @@ function migrateLegacyRecurringTransactions(loaded) {
         ...first,
         id: crypto.randomUUID(),
         date,
+        dueDate: first.dueDate ? addMonthsToDate(first.dueDate, index) : "",
         status: index === 0 ? first.status : "pending",
       });
     }
@@ -250,6 +252,7 @@ function ensureRecurringSeries(loaded) {
         ...first,
         id: crypto.randomUUID(),
         date,
+        dueDate: first.dueDate ? addMonthsToDate(first.dueDate, index) : "",
         status: index === 0 ? first.status : "pending",
         recurringGroupId: groupId,
       });
@@ -791,6 +794,7 @@ function createTransactionInstallments(values) {
       recurring: "Sim",
       thirdParty: values.thirdParty || "Nao",
       thirdPartyName: values.thirdParty === "Sim" ? values.thirdPartyName : "",
+      dueDate: values.category === "Contas" && values.dueDate ? addMonthsToDate(values.dueDate, index) : "",
     }));
   }
 
@@ -818,6 +822,7 @@ function createTransactionInstallments(values) {
     recurring: values.recurring,
     thirdParty: values.thirdParty || "Nao",
     thirdPartyName: values.thirdParty === "Sim" ? values.thirdPartyName : "",
+    dueDate: values.category === "Contas" && values.dueDate ? addMonthsToDate(values.dueDate, index) : "",
   }));
 }
 
@@ -1312,6 +1317,8 @@ function openEditTransaction(transaction) {
   form.elements.type.value = transaction.type;
   form.elements.description.value = transaction.description;
   form.elements.category.value = transaction.category;
+  form.elements.dueDate.value = transaction.dueDate || "";
+  updateDueDateField(form.elements.category, form.elements.dueDate);
   form.elements.amount.value = transaction.amount;
   setEditSelectValue(form.elements.payment, transaction.payment);
   form.elements.status.value = transaction.status;
@@ -1355,6 +1362,9 @@ function applyTransactionEdits(sourceTransaction, targets, values) {
     item.type = values.type;
     item.description = values.description.trim();
     item.category = values.category.trim();
+    item.dueDate = normalizeCategoryName(values.category) === normalizeCategoryName("Contas")
+      ? values.dueDate || ""
+      : "";
     item.amount = Number(values.amount);
     item.payment = values.payment;
     item.status = values.status;
@@ -1757,6 +1767,15 @@ function updateCategoryField() {
   field.classList.toggle("is-hidden", !isOther);
   input.required = isOther;
   if (!isOther) input.value = "";
+  updateDueDateField(categorySelect, document.querySelector("#dueDateInput"));
+}
+
+function updateDueDateField(categoryInput, dueDateInput) {
+  const isBills = normalizeCategoryName(categoryInput.value) === normalizeCategoryName("Contas");
+  dueDateInput.closest("label").classList.toggle("is-hidden", !isBills);
+  dueDateInput.disabled = !isBills;
+  dueDateInput.required = isBills;
+  if (!isBills) dueDateInput.value = "";
 }
 
 function updateInstallmentFields() {
@@ -1804,6 +1823,9 @@ function initializeTransactionFormDefaults() {
 }
 
 document.querySelector("#transactionCategory").addEventListener("change", updateCategoryField);
+document.querySelector("#editTransactionForm").elements.category.addEventListener("input", (event) => {
+  updateDueDateField(event.target, document.querySelector("#editDueDateInput"));
+});
 document.querySelector("#installmentSelect").addEventListener("change", updateInstallmentFields);
 document.querySelector("#installmentCount").addEventListener("input", updateInstallmentFields);
 document.querySelector("#recurringSelect").addEventListener("change", updateInstallmentFields);
