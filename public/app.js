@@ -642,7 +642,6 @@ function renderTransactions() {
       </div>
       <button class="month-tabs-arrow" type="button" data-month-scroll="1" aria-label="Ver proximos meses">&#8250;</button>
     </div>
-    ${renderTransactionCategoryFilter()}
     ${renderMonthlyTransactionTable(activeTransactionMonth, monthlyGroups[activeTransactionMonth])}`;
   requestAnimationFrame(() => {
     document.querySelector(`[data-transaction-month="${activeTransactionMonth}"]`)?.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
@@ -650,18 +649,14 @@ function renderTransactions() {
 }
 
 function renderTransactionCategoryFilter() {
-  const categories = [...new Set(data.transactions.map((item) => item.category).filter(Boolean))]
-    .sort((categoryA, categoryB) => categoryA.localeCompare(categoryB, "pt-BR"));
-  const activeLabel = selectedTransactionCategory === "all" ? "Filtro" : `Filtro: ${selectedTransactionCategory}`;
-
   return `<details class="transaction-filter">
-    <summary>${activeLabel}</summary>
+    <summary class="${selectedTransactionCategory === "all" ? "" : "is-filtered"}">Filtro</summary>
     <div class="transaction-filter-panel">
       <label>
         <span>Categoria</span>
         <select id="transactionCategoryFilter">
           <option value="all">Todas as categorias</option>
-          ${categories.map((category) => `
+          ${financialCategories.map((category) => `
             <option value="${category}" ${category === selectedTransactionCategory ? "selected" : ""}>${category}</option>
           `).join("")}
         </select>
@@ -687,7 +682,7 @@ function renderTransactionMonthTab(monthKey, rows) {
 function renderMonthlyTransactionTable(monthKey, rows) {
   const visibleRows = selectedTransactionCategory === "all"
     ? rows
-    : rows.filter((item) => item.category === selectedTransactionCategory);
+    : rows.filter((item) => transactionMatchesBudgetCategory(item.category, selectedTransactionCategory));
   const monthDate = new Date(`${monthKey}-01T12:00:00`);
   const monthLabel = monthDate.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
   const income = sum(visibleRows, (item) => item.type === "income");
@@ -704,6 +699,7 @@ function renderMonthlyTransactionTable(monthKey, rows) {
         <span class="month-total income">Entradas: ${money(income)}</span>
         <span class="month-total expense">Saidas: ${money(expense)}</span>
         <span class="month-total pending">${pending} ${pending === 1 ? "pendente" : "pendentes"}</span>
+        ${renderTransactionCategoryFilter()}
       </div>
     </div>
     <div class="table-wrap">
