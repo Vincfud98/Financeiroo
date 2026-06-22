@@ -265,7 +265,11 @@ function money(value) {
 }
 
 function dateBR(value) {
-  return new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR");
+  return new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
 }
 
 function localDateKey(date = new Date()) {
@@ -708,27 +712,24 @@ function renderMonthlyTransactionTable(monthKey, rows) {
       <table class="finance-table">
         <thead>
           <tr>
+            <th class="action-column" aria-label="Opcoes"></th>
             <th>Data</th>
-            <th>Mes</th>
-            <th>Ano</th>
-            <th>Tipo</th>
             <th>Descricao</th>
             <th>Categoria</th>
             <th>Valor</th>
             <th>Forma de pagamento</th>
             <th>Parcelado</th>
-            <th>Qtd. parcelas</th>
+            <th>Qtde.</th>
             <th>Parcela atual</th>
             <th>Status</th>
             <th>Recorrente</th>
             <th>Gastos por terceiro</th>
-            <th>Nome do terceiro</th>
-            <th></th>
+            <th>Nome</th>
           </tr>
         </thead>
         <tbody>${visibleRows.length
           ? visibleRows.map(renderTransactionRow).join("")
-          : '<tr><td class="filtered-empty-state" colspan="16">Nenhum lancamento nesta categoria para o mes selecionado.</td></tr>'
+          : '<tr><td class="filtered-empty-state" colspan="13">Nenhum lancamento nesta categoria para o mes selecionado.</td></tr>'
         }</tbody>
       </table>
     </div>
@@ -736,13 +737,11 @@ function renderMonthlyTransactionTable(monthKey, rows) {
 }
 
 function renderTransactionRow(item) {
-  const date = new Date(`${item.date}T12:00:00`);
-  const monthName = date.toLocaleDateString("pt-BR", { month: "long" });
   return `<tr class="${item.thirdParty === "Sim" ? "third-party-row" : ""}">
+    <td class="action-column">
+      <button class="row-menu-button" data-row-menu="${item.id}" type="button" aria-label="Opcoes de ${item.description}" title="Mais opcoes">&#8942;</button>
+    </td>
     <td>${dateBR(item.date)}</td>
-    <td>${monthName}</td>
-    <td>${date.getFullYear()}</td>
-    <td>${item.type === "income" ? "Entrada" : "Saida"}</td>
     <td class="transaction-description" title="${item.description}">${item.description}</td>
     <td>${item.category}</td>
     <td class="${item.type === "income" ? "positive" : "negative"}">${money(item.amount)}</td>
@@ -759,9 +758,6 @@ function renderTransactionRow(item) {
     <td>${item.recurring}</td>
     <td>${item.thirdParty}</td>
     <td>${item.thirdParty === "Sim" ? item.thirdPartyName || "Nao informado" : "-"}</td>
-    <td>
-      <button class="row-menu-button" data-row-menu="${item.id}" type="button" aria-label="Opcoes de ${item.description}" title="Mais opcoes">&#8942;</button>
-    </td>
   </tr>`;
 }
 

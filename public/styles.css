@@ -751,11 +751,13 @@ body.dark-mode .budget-row-over {
 
 .metric-card.alert strong,
 .negative {
-  color: var(--red);
+  color: #d52f3f;
+  font-weight: 800;
 }
 
 .positive {
-  color: var(--green-2);
+  color: #087a54;
+  font-weight: 800;
 }
 
 .panel {
@@ -1196,7 +1198,7 @@ body.dark-mode .budget-row-over {
 }
 
 .finance-table {
-  min-width: 1810px;
+  min-width: 1510px;
 }
 
 .monthly-tables {
@@ -1435,9 +1437,30 @@ body.dark-mode .budget-row-over {
   background: #f8faf9;
 }
 
-.finance-table th:first-child,
-.finance-table td:first-child {
-  padding-left: 20px;
+.finance-table .action-column {
+  position: sticky;
+  left: 0;
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.finance-table th.action-column {
+  z-index: 4;
+  background: #f8faf9;
+}
+
+.finance-table td.action-column {
+  z-index: 2;
+  background: var(--panel);
+  box-shadow: 1px 0 0 var(--line);
+}
+
+.finance-table th:nth-child(2),
+.finance-table td:nth-child(2) {
+  padding-left: 16px;
 }
 
 .finance-table th:last-child,
@@ -1481,12 +1504,25 @@ body.dark-mode .budget-row-over {
   background: #e8f4fb;
 }
 
-.finance-table tbody tr.third-party-row td:first-child {
-  box-shadow: inset 4px 0 0 #29a3d6;
+.finance-table tbody tr.third-party-row td.action-column {
+  background: #e8f4fb;
+  box-shadow: inset 4px 0 0 #29a3d6, 1px 0 0 var(--line);
 }
 
 body.dark-mode .finance-table tbody tr.third-party-row,
 body.dark-mode .finance-table tbody tr.third-party-row:hover {
+  background: #17313d;
+}
+
+body.dark-mode .finance-table th.action-column {
+  background: #222a27;
+}
+
+body.dark-mode .finance-table td.action-column {
+  background: var(--panel);
+}
+
+body.dark-mode .finance-table tbody tr.third-party-row td.action-column {
   background: #17313d;
 }
 
