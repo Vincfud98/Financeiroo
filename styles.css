@@ -2067,19 +2067,22 @@ tbody tr:hover {
 
 .bank-card {
   position: relative;
-  min-height: 310px;
+  aspect-ratio: 1.586 / 1;
   overflow: hidden;
-  padding: 22px;
-  border-radius: 8px;
+  padding: 24px 28px;
+  border-radius: 16px;
   color: #fff;
-  box-shadow: 0 18px 42px rgba(32, 41, 39, 0.15);
+  box-shadow: 3px 3px 17px 0px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .bank-menu-button {
   position: absolute;
   z-index: 3;
-  top: 14px;
-  right: 12px;
+  top: 16px;
+  right: 16px;
   display: grid;
   place-items: center;
   width: 32px;
@@ -2101,38 +2104,33 @@ tbody tr:hover {
 .bank-card::after {
   content: "";
   position: absolute;
-  right: -42px;
-  bottom: -72px;
-  width: 190px;
-  height: 190px;
-  border: 34px solid rgba(255, 255, 255, 0.1);
+  right: -30px;
+  bottom: -50px;
+  width: 160px;
+  height: 160px;
+  border: 30px solid rgba(255, 255, 255, 0.08);
   border-radius: 50%;
 }
 
 .bank-assai {
-  color: #30250d;
-  background: #c9a33c;
+  color: #fff;
+  background: radial-gradient(circle at 20% 30%, #e8b830 0%, #c49020 100%);
 }
 
 .bank-inter {
-  background: #e86818;
+  background: radial-gradient(circle at 20% 30%, #ff7a2e 0%, #d45a10 100%);
 }
 
 .bank-nubank {
-  background: #6f2b8f;
+  background: radial-gradient(circle at 20% 30%, #9b30ff 0%, #6b1fa0 100%);
 }
 
 .bank-card-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.bank-card-head {
+  gap: 12px;
   position: relative;
   z-index: 1;
-  justify-content: flex-start;
 }
 
 .bank-card-head p,
@@ -2140,39 +2138,49 @@ tbody tr:hover {
   margin: 0;
 }
 
-.bank-card-head p,
+.bank-card-head p {
+  opacity: 0.7;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .bank-card-balance span {
-  opacity: 0.76;
-  font-size: 0.74rem;
-  font-weight: 700;
+  opacity: 0.7;
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .bank-card-head h2 {
-  margin-top: 4px;
-  font-size: 1.2rem;
+  margin-top: 2px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .bank-monogram {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid rgba(255, 255, 255, 0.36);
+  width: 36px;
+  height: 36px;
+  border: none;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.14);
-  font-size: 1.1rem;
-  font-weight: 900;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .bank-assai .bank-monogram {
-  border-color: rgba(48, 37, 13, 0.2);
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .bank-card-balance {
   position: relative;
   z-index: 1;
-  margin: 42px 0 0;
+  margin: 0;
 }
 
 .bank-card-dates {
@@ -2180,8 +2188,8 @@ tbody tr:hover {
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 28px;
+  gap: 10px;
+  margin-top: 0;
 }
 
 .bank-card-dates span,
@@ -2190,15 +2198,17 @@ tbody tr:hover {
 }
 
 .bank-card-dates span {
-  min-height: 30px;
-  opacity: 0.78;
-  font-size: 0.68rem;
-  font-weight: 700;
+  min-height: auto;
+  opacity: 0.65;
+  font-size: 0.62rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .bank-card-dates strong {
-  margin-top: 4px;
-  font-size: 0.88rem;
+  margin-top: 2px;
+  font-size: 0.82rem;
 }
 
 .bank-invoice-status {
@@ -2247,8 +2257,9 @@ tbody tr:hover {
 }
 
 .bank-card-balance strong {
-  margin-top: 8px;
-  font-size: 1.85rem;
+  margin-top: 4px;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
 }
 
 .bank-expense-details {
