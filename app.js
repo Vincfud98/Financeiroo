@@ -1369,8 +1369,8 @@ function renderDashboardPatrimony() {
     <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Evolução do saldo acumulado">
       <defs>
         <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.35"/>
-          <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.02"/>
+          <stop offset="0%" stop-color="#888" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#888" stop-opacity="0.02"/>
         </linearGradient>
       </defs>
       <line class="grid-line" x1="${paddingX}" y1="${paddingY}" x2="${paddingX}" y2="${height - paddingY}"></line>
