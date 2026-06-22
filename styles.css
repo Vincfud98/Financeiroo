@@ -2162,19 +2162,31 @@ tbody tr:hover {
 }
 
 .bank-monogram {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.2);
-  font-size: 1rem;
-  font-weight: 800;
+  display: none;
 }
 
-.bank-assai .bank-monogram {
-  background: rgba(255, 255, 255, 0.25);
+.bank-logo {
+  display: block;
+  height: 28px;
+}
+
+.bank-logo svg {
+  height: 28px;
+  width: auto;
+}
+
+.bank-card-chip {
+  width: 40px;
+  height: 30px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #e8c547 0%, #d4a82c 50%, #c9973a 100%);
+  opacity: 0.85;
+  margin: 4px 0;
+}
+
+.bank-card-chip + .bank-card-balance {
+  position: relative;
+  z-index: 1;
 }
 
 .bank-card-balance {
