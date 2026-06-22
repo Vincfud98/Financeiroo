@@ -2114,8 +2114,8 @@ tbody tr:hover {
 }
 
 .bank-assai {
-  color: #1a1a1a;
-  background: radial-gradient(circle, #ffe234 0%, #FFD100 100%);
+  color: #fff;
+  background: linear-gradient(135deg, #c9a84c 0%, #b8943d 25%, #d4af37 50%, #a07c28 75%, #8b6914 100%);
 }
 
 .bank-inter {
