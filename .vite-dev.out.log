@@ -1,0 +1,35 @@
+
+> financeiro-app@0.1.0 dev
+> vite --host 127.0.0.1
+
+Port 5173 is in use, trying another one...
+Port 5174 is in use, trying another one...
+
+  [32m[1mVITE[22m v7.3.3[39m  [2mready in [0m[1m455[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5175[22m/[39m
+[2m17:52:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/context/FinanceContext.jsx, /src/sections/TransactionsSection.jsx, /src/index.css[22m
+[2m17:52:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/context/FinanceContext.jsx[22m Could not Fast Refresh ("useFinance" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m17:52:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/context/FinanceContext.jsx[22m
+[2m17:52:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/context/FinanceContext.jsx, /src/components/layout/HeaderBar.jsx, /src/sections/DashboardSection.jsx, /src/sections/TransactionsSection.jsx, /src/sections/AccountsSection.jsx, /src/sections/GoalsSection.jsx, /src/sections/WishlistSection.jsx, /src/sections/DebtsSection.jsx, /src/sections/AnnualSection.jsx, /src/index.css[22m
+[2m17:52:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/context/FinanceContext.jsx, /src/components/layout/HeaderBar.jsx, /src/sections/DashboardSection.jsx, /src/sections/TransactionsSection.jsx, /src/sections/AccountsSection.jsx, /src/sections/GoalsSection.jsx, /src/sections/WishlistSection.jsx, /src/sections/DebtsSection.jsx, /src/sections/AnnualSection.jsx, /src/index.css[22m
+[2m17:52:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/context/FinanceContext.jsx, /src/index.css[22m
+[2m17:54:17[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m17:54:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/ui/Button.jsx[22m
+[2m17:54:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/ui/Card.jsx[22m
+[2m17:54:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/ui/Table.jsx[22m
+[2m17:54:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m17:54:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/layout/HeaderBar.jsx, /src/index.css[22m
+[2m17:54:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/layout/Sidebar.jsx, /src/index.css[22m
+[2m17:54:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m17:56:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/sections/DashboardSection.jsx, /src/index.css[22m
+[2m17:56:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m17:58:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m17:58:23[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m17:58:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.jsx, /src/index.css[22m
+[2m17:58:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/sections/DebtsSection.jsx, /src/index.css[22m
+[2m17:58:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/sections/AnnualSection.jsx, /src/index.css[22m
+[2m17:58:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/context/FinanceContext.jsx, /src/index.css[22m
+[2m17:58:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/sections/DashboardSection.jsx, /src/index.css[22m
+[2m17:58:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/context/FinanceContext.jsx[22m Could not Fast Refresh ("useFinance" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m17:58:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/context/FinanceContext.jsx[22m
