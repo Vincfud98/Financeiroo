@@ -113,6 +113,12 @@ function normalizeLoadedData(loaded) {
   loaded.accounts ||= [];
   loaded.monthlyPlans ||= {};
   loaded.recurringStops ||= {};
+  loaded.bankCardSettings ||= {};
+  loaded.bankInvoiceStatuses ||= {};
+  ["Assai", "Inter", "Nubank"].forEach((bank) => {
+    loaded.bankCardSettings[bank] ||= { closingDay: 20, dueDay: 27, dueMonthOffset: 0 };
+    loaded.bankInvoiceStatuses[bank] ||= {};
+  });
   loaded.transactions ||= [];
   loaded.goals ||= [];
   loaded.goalMovements ||= [];
@@ -355,7 +361,7 @@ function getOfficialPaymentName(value) {
 
 function getBankSummary(bankName, monthKey) {
   const allRows = data.transactions.filter(
-    (item) => normalizeBankName(item.payment) === bankName && item.date.startsWith(monthKey)
+    (item) => normalizeBankName(item.payment) === bankName && getTransactionInvoiceMonth(item, bankName) === monthKey
   );
   const paidRows = allRows.filter((item) => item.status === "paid");
   const income = sum(paidRows, (item) => item.type === "income");
@@ -364,6 +370,37 @@ function getBankSummary(bankName, monthKey) {
     .filter(isCountableExpense)
     .sort((a, b) => b.date.localeCompare(a.date));
   return { rows: paidRows, expenses, income, expense, balance: Math.max(0, income - expense) };
+}
+
+function dateForMonthDay(monthKey, day) {
+  const [dateYear, dateMonth] = monthKey.split("-").map(Number);
+  const lastDay = new Date(dateYear, dateMonth, 0).getDate();
+  return `${dateYear}-${String(dateMonth).padStart(2, "0")}-${String(Math.min(Number(day), lastDay)).padStart(2, "0")}`;
+}
+
+function getBankCycleDates(bankName, monthKey) {
+  const settings = data.bankCardSettings[bankName];
+  const closingDate = dateForMonthDay(monthKey, settings.closingDay);
+  const dueMonth = monthKeyOffset(monthKey, Number(settings.dueMonthOffset || 0));
+  const dueDate = dateForMonthDay(dueMonth, settings.dueDay);
+  return { closingDate, dueDate };
+}
+
+function getTransactionInvoiceMonth(item, bankName) {
+  const transactionMonth = item.date.slice(0, 7);
+  const closingDay = Number(data.bankCardSettings[bankName]?.closingDay || 20);
+  return Number(item.date.slice(-2)) > closingDay
+    ? monthKeyOffset(transactionMonth, 1)
+    : transactionMonth;
+}
+
+function getBankInvoiceStatus(bankName, monthKey) {
+  return data.bankInvoiceStatuses[bankName]?.[monthKey] || "pending";
+}
+
+function setBankInvoiceStatus(bankName, monthKey, status) {
+  data.bankInvoiceStatuses[bankName] ||= {};
+  data.bankInvoiceStatuses[bankName][monthKey] = status;
 }
 
 function renderTabs() {
@@ -596,6 +633,17 @@ function renderDashboardAlerts(forecast, monthDate) {
   const pendingTransactions = selectedMonthRows().filter((item) => isCountableExpense(item) && item.status === "pending");
   const incompleteGoals = data.goals.filter((goal) => Number(goal.target) > 0 && goal.saved < goal.target);
   const alerts = [];
+  ["Assai", "Inter", "Nubank"].forEach((bankName) => {
+    const summary = getBankSummary(bankName, selectedMonthKey);
+    const cycle = getBankCycleDates(bankName, selectedMonthKey);
+    const invoiceClosed = new Date(`${cycle.closingDate}T23:59:59`) <= today;
+    if (summary.expense > 0 && invoiceClosed && getBankInvoiceStatus(bankName, selectedMonthKey) === "pending") {
+      alerts.push({
+        title: `Fatura ${bankName} pendente`,
+        detail: `${money(summary.expense)} com vencimento em ${dateBR(cycle.dueDate)}.`,
+      });
+    }
+  });
   pendingTransactions.slice(0, 3).forEach((item) => alerts.push({
     title: "Conta pendente",
     detail: `${item.description}: ${money(item.amount)} vence em ${dateBR(item.date)}.`,
@@ -837,7 +885,14 @@ function renderAccounts() {
 
   banks.forEach((bank) => {
     const card = document.querySelector(`[data-bank-card="${bank.key}"]`);
+    const cycle = getBankCycleDates(bank.key, selectedBankMonth);
     card.querySelector("[data-bank-balance]").textContent = money(bank.expense);
+    card.querySelector("[data-bank-closing-date]").textContent = dateBR(cycle.closingDate);
+    card.querySelector("[data-bank-due-date]").textContent = dateBR(cycle.dueDate);
+    const statusSelect = document.querySelector(`[data-bank-invoice-status="${bank.key}"]`);
+    const invoiceStatus = getBankInvoiceStatus(bank.key, selectedBankMonth);
+    statusSelect.value = invoiceStatus;
+    statusSelect.className = `bank-status-select ${invoiceStatus}`;
     const details = document.querySelector(`[data-bank-details="${bank.key}"]`);
     details.querySelector("[data-bank-expense-count]").textContent = bank.expenses.length;
     details.querySelector("[data-bank-expense-list]").innerHTML = bank.expenses.length
@@ -1374,6 +1429,39 @@ function applyTransactionEdits(sourceTransaction, targets, values) {
   });
 }
 
+function closeBankActionMenu() {
+  const menu = document.querySelector("#bankActionMenu");
+  menu.hidden = true;
+  menu.dataset.bank = "";
+  document.querySelectorAll("[data-bank-menu].is-active").forEach((button) => button.classList.remove("is-active"));
+}
+
+function openBankActionMenu(button) {
+  const menu = document.querySelector("#bankActionMenu");
+  closeBankActionMenu();
+  button.classList.add("is-active");
+  menu.dataset.bank = button.dataset.bankMenu;
+  menu.hidden = false;
+
+  const rect = button.getBoundingClientRect();
+  const menuWidth = 190;
+  const menuHeight = menu.offsetHeight;
+  const left = Math.min(window.innerWidth - menuWidth - 12, Math.max(12, rect.right - menuWidth));
+  const top = rect.bottom + menuHeight + 8 > window.innerHeight ? rect.top - menuHeight - 6 : rect.bottom + 6;
+  menu.style.left = `${left}px`;
+  menu.style.top = `${Math.max(12, top)}px`;
+}
+
+function openEditBank(bankName) {
+  const dialog = document.querySelector("#editBankDialog");
+  const form = document.querySelector("#editBankForm");
+  const cycle = getBankCycleDates(bankName, selectedBankMonth);
+  form.elements.bank.value = bankName;
+  form.elements.closingDate.value = cycle.closingDate;
+  form.elements.dueDate.value = cycle.dueDate;
+  dialog.showModal();
+}
+
 function removeRecurringFrom(transaction) {
   const startMonth = transaction.date.slice(0, 7);
   data.recurringStops ||= {};
@@ -1406,8 +1494,26 @@ document.addEventListener("click", (event) => {
   const goalActionButton = event.target.closest("[data-goal-action]");
   const budgetMenuButton = event.target.closest("[data-budget-menu]");
   const budgetActionButton = event.target.closest("[data-budget-action]");
+  const bankMenuButton = event.target.closest("[data-bank-menu]");
+  const bankActionButton = event.target.closest("[data-bank-action]");
   if (tabButton) switchTab(tabButton.dataset.tab);
   if (jumpButton) switchTab(jumpButton.dataset.jump);
+  if (bankMenuButton) {
+    event.stopPropagation();
+    closeRowActionMenu();
+    closeGoalActionMenu();
+    closeBudgetActionMenu();
+    openBankActionMenu(bankMenuButton);
+    return;
+  }
+  if (bankActionButton) {
+    const menu = document.querySelector("#bankActionMenu");
+    if (bankActionButton.dataset.bankAction === "edit" && menu.dataset.bank) {
+      openEditBank(menu.dataset.bank);
+    }
+    closeBankActionMenu();
+    return;
+  }
   if (rowMenuButton) {
     event.stopPropagation();
     openRowActionMenu(rowMenuButton);
@@ -1499,12 +1605,14 @@ document.addEventListener("click", (event) => {
   if (!event.target.closest("#rowActionMenu")) closeRowActionMenu();
   if (!event.target.closest("#goalActionMenu")) closeGoalActionMenu();
   if (!event.target.closest("#budgetActionMenu")) closeBudgetActionMenu();
+  if (!event.target.closest("#bankActionMenu")) closeBankActionMenu();
 });
 
 window.addEventListener("resize", () => {
   closeRowActionMenu();
   closeGoalActionMenu();
   closeBudgetActionMenu();
+  closeBankActionMenu();
 });
 
 document.querySelectorAll("[data-close-dialog]").forEach((button) => {
@@ -1628,6 +1736,26 @@ document.querySelector("#themeToggle").addEventListener("click", () => {
   darkModeEnabled = !darkModeEnabled;
   localStorage.setItem("dark-mode", String(darkModeEnabled));
   applyTheme();
+});
+
+document.querySelector("#editBankForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const values = Object.fromEntries(new FormData(form).entries());
+  const closingMonth = values.closingDate.slice(0, 7);
+  const dueMonth = values.dueDate.slice(0, 7);
+  data.bankCardSettings[values.bank] = {
+    closingDay: Number(values.closingDate.slice(-2)),
+    dueDay: Number(values.dueDate.slice(-2)),
+    dueMonthOffset: monthDifference(`${closingMonth}-01`, `${dueMonth}-01`),
+  };
+  saveData();
+  form.closest("dialog").close();
+  renderAll();
+});
+
+document.querySelectorAll("[data-close-bank-dialog]").forEach((button) => {
+  button.addEventListener("click", () => document.querySelector("#editBankDialog").close());
 });
 
 document.querySelector("#sidebarToggle").addEventListener("click", () => {
@@ -1847,6 +1975,13 @@ document.addEventListener("change", (event) => {
   if (event.target.matches("#transactionCategoryFilter")) {
     selectedTransactionCategory = event.target.value;
     renderTransactions();
+    return;
+  }
+  if (event.target.matches("[data-bank-invoice-status]")) {
+    setBankInvoiceStatus(event.target.dataset.bankInvoiceStatus, selectedBankMonth, event.target.value);
+    event.target.className = `bank-status-select ${event.target.value}`;
+    saveData();
+    renderDashboard();
     return;
   }
   const statusSelect = event.target.closest("[data-status-id]");

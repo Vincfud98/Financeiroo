@@ -326,12 +326,24 @@
           <div class="bank-cards" id="accountsCards">
             <div class="bank-card-column">
               <article class="bank-card bank-assai" data-bank-card="Assai">
+                <button class="bank-menu-button" data-bank-menu="Assai" type="button" aria-label="Opcoes do cartao Assai" title="Mais opcoes">&#8942;</button>
                 <div class="bank-card-head">
                   <span class="bank-monogram">A</span>
                   <div><p>Cartao de credito</p><h2>Assa&iacute;</h2></div>
                 </div>
                 <div class="bank-card-balance"><span>Saldo final</span><strong data-bank-balance>R$ 0,00</strong></div>
+                <div class="bank-card-dates">
+                  <div><span>Fechamento do cartao</span><strong data-bank-closing-date>--/--/--</strong></div>
+                  <div><span>Vencimento da fatura</span><strong data-bank-due-date>--/--/--</strong></div>
+                </div>
               </article>
+              <label class="bank-invoice-status">
+                <span>Status da fatura</span>
+                <select data-bank-invoice-status="Assai">
+                  <option value="pending">Pendente</option>
+                  <option value="paid">Pago</option>
+                </select>
+              </label>
               <details class="bank-expense-details" data-bank-details="Assai">
                 <summary><span>Gastos no Assa&iacute;</span><strong data-bank-expense-count>0</strong></summary>
                 <div class="bank-expense-list" data-bank-expense-list></div>
@@ -340,12 +352,24 @@
 
             <div class="bank-card-column">
               <article class="bank-card bank-inter" data-bank-card="Inter">
+                <button class="bank-menu-button" data-bank-menu="Inter" type="button" aria-label="Opcoes do cartao Inter" title="Mais opcoes">&#8942;</button>
                 <div class="bank-card-head">
                   <span class="bank-monogram">I</span>
                   <div><p>Cartao de credito</p><h2>Inter</h2></div>
                 </div>
                 <div class="bank-card-balance"><span>Saldo final</span><strong data-bank-balance>R$ 0,00</strong></div>
+                <div class="bank-card-dates">
+                  <div><span>Fechamento do cartao</span><strong data-bank-closing-date>--/--/--</strong></div>
+                  <div><span>Vencimento da fatura</span><strong data-bank-due-date>--/--/--</strong></div>
+                </div>
               </article>
+              <label class="bank-invoice-status">
+                <span>Status da fatura</span>
+                <select data-bank-invoice-status="Inter">
+                  <option value="pending">Pendente</option>
+                  <option value="paid">Pago</option>
+                </select>
+              </label>
               <details class="bank-expense-details" data-bank-details="Inter">
                 <summary><span>Gastos no Inter</span><strong data-bank-expense-count>0</strong></summary>
                 <div class="bank-expense-list" data-bank-expense-list></div>
@@ -354,12 +378,24 @@
 
             <div class="bank-card-column">
               <article class="bank-card bank-nubank" data-bank-card="Nubank">
+                <button class="bank-menu-button" data-bank-menu="Nubank" type="button" aria-label="Opcoes do cartao Nubank" title="Mais opcoes">&#8942;</button>
                 <div class="bank-card-head">
                   <span class="bank-monogram">N</span>
                   <div><p>Cartao de credito</p><h2>Nubank</h2></div>
                 </div>
                 <div class="bank-card-balance"><span>Saldo final</span><strong data-bank-balance>R$ 0,00</strong></div>
+                <div class="bank-card-dates">
+                  <div><span>Fechamento do cartao</span><strong data-bank-closing-date>--/--/--</strong></div>
+                  <div><span>Vencimento da fatura</span><strong data-bank-due-date>--/--/--</strong></div>
+                </div>
               </article>
+              <label class="bank-invoice-status">
+                <span>Status da fatura</span>
+                <select data-bank-invoice-status="Nubank">
+                  <option value="pending">Pendente</option>
+                  <option value="paid">Pago</option>
+                </select>
+              </label>
               <details class="bank-expense-details" data-bank-details="Nubank">
                 <summary><span>Gastos no Nubank</span><strong data-bank-expense-count>0</strong></summary>
                 <div class="bank-expense-list" data-bank-expense-list></div>
@@ -696,6 +732,10 @@
       <button class="danger-option" type="button" data-budget-action="remove">Remover</button>
     </div>
 
+    <div class="row-action-menu" id="bankActionMenu" hidden>
+      <button type="button" data-bank-action="edit">Editar</button>
+    </div>
+
     <dialog class="edit-dialog goal-edit-dialog" id="editBudgetDialog">
       <form method="dialog" id="editBudgetForm">
         <div class="dialog-head">
@@ -836,6 +876,33 @@
           <button class="ghost-btn series-save-button" type="submit" data-edit-scope="future">Salvar deste mes em diante</button>
           <button class="primary-btn series-save-button" type="submit" data-edit-scope="all">Salvar em toda a serie</button>
           <button class="primary-btn single-save-button" type="submit" data-edit-scope="single">Salvar alteracoes</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="edit-dialog bank-edit-dialog" id="editBankDialog">
+      <form method="dialog" id="editBankForm">
+        <div class="dialog-head">
+          <div>
+            <p class="panel-kicker">Cartao de credito</p>
+            <h2>Editar ciclo da fatura</h2>
+          </div>
+          <button class="dialog-close" type="button" data-close-bank-dialog aria-label="Fechar">&times;</button>
+        </div>
+        <input type="hidden" name="bank" />
+        <div class="edit-form-grid">
+          <label>
+            <span>Data de fechamento</span>
+            <input type="date" name="closingDate" required />
+          </label>
+          <label>
+            <span>Data de vencimento</span>
+            <input type="date" name="dueDate" required />
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button class="ghost-btn" type="button" data-close-bank-dialog>Cancelar</button>
+          <button class="primary-btn" type="submit">Salvar alteracoes</button>
         </div>
       </form>
     </dialog>
