@@ -1131,6 +1131,7 @@ body.dark-mode .budget-row-over {
 }
 
 .transaction-panel {
+  min-width: 0;
   padding: 0;
   overflow: hidden;
 }
@@ -1196,6 +1197,7 @@ body.dark-mode .budget-row-over {
 
 .monthly-tables {
   display: grid;
+  min-width: 0;
   gap: 18px;
   padding: 0 20px 20px;
 }
@@ -1373,10 +1375,37 @@ body.dark-mode .budget-row-over {
 }
 
 .monthly-table-section {
+  width: 100%;
+  min-width: 0;
   overflow: visible;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
+}
+
+.monthly-table-section > .table-wrap {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 0 0 8px 8px;
+  scrollbar-color: #8a918f var(--soft-gray);
+  scrollbar-width: auto;
+}
+
+.monthly-table-section > .table-wrap::-webkit-scrollbar {
+  height: 12px;
+}
+
+.monthly-table-section > .table-wrap::-webkit-scrollbar-track {
+  background: var(--soft-gray);
+}
+
+.monthly-table-section > .table-wrap::-webkit-scrollbar-thumb {
+  border: 3px solid var(--soft-gray);
+  border-radius: 8px;
+  background: #8a918f;
 }
 
 .monthly-table-head {
