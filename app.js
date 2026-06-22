@@ -1,11 +1,21 @@
+const tabIcons = {
+  dashboard: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
+  transactions: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  accounts: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+  goals: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  planning: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  debts: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  annual: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+};
+
 const tabs = [
-  ["dashboard", "Dashboard Geral", "D"],
-  ["transactions", "Controle Financeiro Geral", "+"],
-  ["accounts", "Contas Bancarias", "$"],
-  ["goals", "Metas Financeiras", "M"],
-  ["planning", "Planejamento Mensal", "P"],
-  ["debts", "Controle de Dividas", "!"],
-  ["annual", "Resumo Anual", "12"],
+  ["dashboard", "Dashboard Geral"],
+  ["transactions", "Controle Financeiro Geral"],
+  ["accounts", "Contas Bancárias"],
+  ["goals", "Metas Financeiras"],
+  ["planning", "Planejamento Mensal"],
+  ["debts", "Controle de Dívidas"],
+  ["annual", "Resumo Anual"],
 ];
 
 const storageKey = "financa-pessoal-app-v1";
@@ -58,15 +68,15 @@ const sampleData = {
     { id: crypto.randomUUID(), name: "Investimentos", type: "Investimento", balance: 15600 },
   ],
   transactions: [
-    { id: crypto.randomUUID(), date: `${year}-${month}-02`, type: "income", category: "Salario", description: "Recebimento mensal", account: "Banco Principal", payment: "Transferencia", amount: 7200 },
+    { id: crypto.randomUUID(), date: `${year}-${month}-02`, type: "income", category: "Salario", description: "Recebimento mensal", account: "Banco Principal", payment: "Transferência", amount: 7200 },
     { id: crypto.randomUUID(), date: `${year}-${month}-04`, type: "expense", category: "Moradia", description: "Aluguel", account: "Banco Principal", payment: "Pix", amount: 1850 },
     { id: crypto.randomUUID(), date: `${year}-${month}-07`, type: "expense", category: "Mercado", description: "Compras da semana", account: "Banco Principal", payment: "Credito", amount: 620 },
     { id: crypto.randomUUID(), date: `${year}-${month}-10`, type: "expense", category: "Transporte", description: "Combustivel e app", account: "Banco Principal", payment: "Debito", amount: 340 },
-    { id: crypto.randomUUID(), date: `${year}-01-14`, type: "income", category: "Extra", description: "Projeto pontual", account: "Banco Principal", payment: "Transferencia", amount: 1600 },
+    { id: crypto.randomUUID(), date: `${year}-01-14`, type: "income", category: "Extra", description: "Projeto pontual", account: "Banco Principal", payment: "Transferência", amount: 1600 },
     { id: crypto.randomUUID(), date: `${year}-02-11`, type: "expense", category: "Saude", description: "Consultas", account: "Banco Principal", payment: "Pix", amount: 480 },
   ],
   goals: [
-    { id: crypto.randomUUID(), name: "Reserva de emergencia", target: 24000, saved: 14800, deadline: `${year}-12-31` },
+    { id: crypto.randomUUID(), name: "Reserva de emergência", target: 24000, saved: 14800, deadline: `${year}-12-31` },
     { id: crypto.randomUUID(), name: "Viagem", target: 8000, saved: 2600, deadline: `${year}-10-20` },
   ],
   goalMovements: [],
@@ -78,8 +88,8 @@ const sampleData = {
     { id: crypto.randomUUID(), category: "Lazer", planned: 500 },
   ],
   debts: [
-    { id: crypto.randomUUID(), name: "Cartao parcelado", creditor: "Banco Principal", total: 3600, paid: 2100, due: `${year}-${month}-18` },
-    { id: crypto.randomUUID(), name: "Financiamento", creditor: "Instituicao financeira", total: 12000, paid: 3500, due: `${year}-11-05` },
+    { id: crypto.randomUUID(), name: "Cartão parcelado", creditor: "Banco Principal", total: 3600, paid: 2100, due: `${year}-${month}-18` },
+    { id: crypto.randomUUID(), name: "Financiamento", creditor: "Instituição financeira", total: 12000, paid: 3500, due: `${year}-11-05` },
   ],
   monthlyPlans: {
     [`${year}-${month}`]: {
@@ -183,7 +193,7 @@ function ensureFixedReserveGoal(loaded) {
 
 function normalizeTransactions(transactions) {
   transactions.forEach((item) => {
-    item.payment ||= item.type === "income" ? "Pix" : "Nao informado";
+    item.payment ||= item.type === "income" ? "Pix" : "Não informado";
     item.installment ||= "Nao";
     item.installmentCount = Number(item.installmentCount || 1);
     item.installmentCurrent = Number(item.installmentCurrent || 1);
@@ -406,7 +416,7 @@ function setBankInvoiceStatus(bankName, monthKey, status) {
 function renderTabs() {
   const container = document.querySelector("#tabs");
   container.innerHTML = tabs
-    .map(([id, label, icon]) => `<button class="tab-btn ${id === "dashboard" ? "is-active" : ""}" data-tab="${id}" data-icon="${icon}" type="button" title="${label}" aria-label="${label}"><span>${label}</span></button>`)
+    .map(([id, label]) => `<button class="tab-btn ${id === "dashboard" ? "is-active" : ""}" data-tab="${id}" type="button" title="${label}" aria-label="${label}"><i class="tab-icon">${tabIcons[id] || ""}</i><span>${label}</span></button>`)
     .join("");
 }
 
@@ -518,7 +528,7 @@ function renderFlowChart() {
   });
   const maxValue = Math.max(1, ...monthly.flatMap((item) => [item.income, item.expense, Math.max(0, item.reserve)]));
   document.querySelector("#flowChart").innerHTML = monthly.map((item) => `
-    <div class="annual-bar-group" title="${item.shortLabel}: entradas ${money(item.income)}, saidas ${money(item.expense)}, reserva ${money(item.reserve)}">
+    <div class="annual-bar-group" title="${item.shortLabel}: entradas ${money(item.income)}, saídas ${money(item.expense)}, reserva ${money(item.reserve)}">
       <div class="annual-bars">
         <span class="annual-bar" style="height:${Math.max(2, (item.income / maxValue) * 100)}%"></span>
         <span class="annual-bar expense" style="height:${Math.max(2, (item.expense / maxValue) * 100)}%"></span>
@@ -549,7 +559,7 @@ function calculatePreviousMonthRemainder() {
 
 function aggregateBy(rows, field) {
   return Object.entries(rows.reduce((groups, item) => {
-    const key = item[field] || "Nao informado";
+    const key = item[field] || "Não informado";
     groups[key] = (groups[key] || 0) + Number(item.amount || 0);
     return groups;
   }, {})).sort((a, b) => b[1] - a[1]);
@@ -605,7 +615,7 @@ function renderCategoryTable(expenses) {
         </td>
       </tr>`;
     }).join("")
-    : '<tr><td colspan="3"><div class="empty-state">Nenhum gasto registrado neste mes.</div></td></tr>';
+    : '<tr><td colspan="3"><div class="empty-state">Nenhum gasto registrado neste mês.</div></td></tr>';
 }
 
 function renderDashboardGoals() {
@@ -618,7 +628,7 @@ function renderDashboardGoals() {
         <span>${isReserve ? "Fixa" : `${percentage}%`}</span>
         ${isReserve ? '<div class="reserve-goal-track"><span></span></div>' : `<div class="progress"><span style="width:${percentage}%"></span></div>`}
         <span>${isReserve ? money(goal.saved) : `${money(goal.saved)} de ${money(goal.target)}`}</span>
-        <span>${isReserve ? "Sem meta de valor" : goal.deadline ? `ate ${dateBR(goal.deadline)}` : "Sem prazo definido"}</span>
+        <span>${isReserve ? "Sem meta de valor" : goal.deadline ? `até ${dateBR(goal.deadline)}` : "Sem prazo definido"}</span>
       </div>`;
     }).join("")
     : '<div class="empty-state">Nenhuma meta cadastrada.</div>';
@@ -653,11 +663,11 @@ function renderDashboardAlerts(forecast, monthDate) {
     detail: `${debt.name}: ${money(debt.total - getDebtPaidAmount(debt))} em aberto.`,
   }));
   if (forecast < 0) {
-    alerts.push({ title: "Saldo negativo previsto", detail: `O mes pode fechar em ${money(forecast)}.` });
+    alerts.push({ title: "Saldo negativo previsto", detail: `O mês pode fechar em ${money(forecast)}.` });
   }
   incompleteGoals.slice(0, 2).forEach((goal) => alerts.push({
-    title: "Meta nao atingida",
-    detail: `${goal.name} esta em ${Math.round((goal.saved / goal.target) * 100)}%.`,
+    title: "Meta não atingida",
+    detail: `${goal.name} está em ${Math.round((goal.saved / goal.target) * 100)}%.`,
   }));
   document.querySelector("#alertCount").textContent = alerts.length;
   document.querySelector("#dashboardAlerts").innerHTML = alerts.length
@@ -672,7 +682,7 @@ function renderDashboardAlerts(forecast, monthDate) {
 function renderTransactions() {
   const rows = [...data.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
   const pending = rows.filter((item) => item.status === "pending").length;
-  document.querySelector("#transactionTotal").textContent = `${rows.length} lancamentos - ${pending} pendentes`;
+  document.querySelector("#transactionTotal").textContent = `${rows.length} lançamentos - ${pending} pendentes`;
   const monthlyGroups = rows.reduce((groups, item) => {
     const key = item.date.slice(0, 7);
     groups[key] ||= [];
@@ -683,7 +693,7 @@ function renderTransactions() {
   const container = document.querySelector("#transactionsTable");
   const transactionYears = [...new Set(rows.map((item) => Number(item.date.slice(0, 4))))].sort();
   if (!transactionYears.length) {
-    container.innerHTML = '<div class="empty-state">Nenhum lancamento cadastrado.</div>';
+    container.innerHTML = '<div class="empty-state">Nenhum lançamento cadastrado.</div>';
     return;
   }
   transactionYears.forEach((transactionYear) => {
@@ -717,7 +727,7 @@ function renderTransactionCategoryFilter() {
 
   return `<label class="transaction-filter ${selectedTransactionCategory === "all" ? "" : "is-filtered"}">
     <span>${label}</span>
-    <select id="transactionCategoryFilter" aria-label="Filtrar lancamentos por categoria">
+    <select id="transactionCategoryFilter" aria-label="Filtrar lançamentos por categoria">
       <option value="all">Todas as categorias</option>
       ${financialCategories.map((category) => `
         <option value="${category}" ${category === selectedTransactionCategory ? "selected" : ""}>${category}</option>
@@ -751,11 +761,11 @@ function renderMonthlyTransactionTable(monthKey, rows) {
     <div class="monthly-table-head">
       <div class="monthly-table-title">
         <strong>${monthLabel}</strong>
-        <span>${visibleRows.length} ${visibleRows.length === 1 ? "lancamento" : "lancamentos"}</span>
+        <span>${visibleRows.length} ${visibleRows.length === 1 ? "lançamento" : "lançamentos"}</span>
       </div>
       <div class="monthly-table-totals">
         <span class="month-total income">Entradas: ${money(income)}</span>
-        <span class="month-total expense">Saidas: ${money(expense)}</span>
+        <span class="month-total expense">Saídas: ${money(expense)}</span>
         <span class="month-total pending">${pending} ${pending === 1 ? "pendente" : "pendentes"}</span>
         ${renderTransactionCategoryFilter()}
       </div>
@@ -764,9 +774,9 @@ function renderMonthlyTransactionTable(monthKey, rows) {
       <table class="finance-table">
         <thead>
           <tr>
-            <th class="action-column" aria-label="Opcoes"></th>
+            <th class="action-column" aria-label="Opções"></th>
             <th>Data</th>
-            <th>Descricao</th>
+            <th>Descrição</th>
             <th>Categoria</th>
             <th>Valor</th>
             <th>Pagamento</th>
@@ -781,7 +791,7 @@ function renderMonthlyTransactionTable(monthKey, rows) {
         </thead>
         <tbody>${visibleRows.length
           ? visibleRows.map(renderTransactionRow).join("")
-          : '<tr><td class="filtered-empty-state" colspan="13">Nenhum lancamento nesta categoria para o mes selecionado.</td></tr>'
+          : '<tr><td class="filtered-empty-state" colspan="13">Nenhum lançamento nesta categoria para o mês selecionado.</td></tr>'
         }</tbody>
       </table>
     </div>
@@ -791,7 +801,7 @@ function renderMonthlyTransactionTable(monthKey, rows) {
 function renderTransactionRow(item) {
   return `<tr class="${item.thirdParty === "Sim" ? "third-party-row" : ""}">
     <td class="action-column">
-      <button class="row-menu-button" data-row-menu="${item.id}" type="button" aria-label="Opcoes de ${item.description}" title="Mais opcoes">&#8942;</button>
+      <button class="row-menu-button" data-row-menu="${item.id}" type="button" aria-label="Opções de ${item.description}" title="Mais opções">&#8942;</button>
     </td>
     <td>${dateBR(item.date)}</td>
     <td class="transaction-description" title="${item.description}">${item.description}</td>
@@ -809,7 +819,7 @@ function renderTransactionRow(item) {
     </td>
     <td>${item.recurring}</td>
     <td>${item.thirdParty}</td>
-    <td>${item.thirdParty === "Sim" ? item.thirdPartyName || "Nao informado" : "-"}</td>
+    <td>${item.thirdParty === "Sim" ? item.thirdPartyName || "Não informado" : "-"}</td>
   </tr>`;
 }
 
@@ -945,7 +955,7 @@ function renderGoals() {
         <td><span class="goal-percentage">${isReserve ? "Acumulando" : `${percentage}%`}</span></td>
         <td class="goal-progress-cell">${isReserve ? '<div class="reserve-goal-track"><span></span></div>' : `<div class="progress"><span style="width:${percentage}%"></span></div>`}</td>
         <td>
-          ${isReserve ? '<span class="fixed-goal-lock" title="Meta fixa">Fixa</span>' : `<button class="row-menu-button" data-goal-menu="${goal.id}" type="button" aria-label="Opcoes de ${goal.name}" title="Mais opcoes">&#8942;</button>`}
+          ${isReserve ? '<span class="fixed-goal-lock" title="Meta fixa">Fixa</span>' : `<button class="row-menu-button" data-goal-menu="${goal.id}" type="button" aria-label="Opções de ${goal.name}" title="Mais opções">&#8942;</button>`}
         </td>
       </tr>`;
     }).join("")
@@ -1056,7 +1066,7 @@ function renderBudget() {
       const difference = Number(item.planned) - used;
       const consumption = item.planned > 0 ? (used / item.planned) * 100 : used > 0 ? 101 : 0;
       const status = consumption > 100 ? "over" : consumption >= 80 ? "near" : "ok";
-      const statusLabel = status === "over" ? "Acima do orcamento" : status === "near" ? "Proximo do limite" : "Dentro do orcamento";
+      const statusLabel = status === "over" ? "Acima do orçamento" : status === "near" ? "Próximo do limite" : "Dentro do orçamento";
       return `<tr class="${status === "over" ? "budget-row-over" : status === "near" ? "budget-row-near" : ""}">
         <td>${item.category}</td>
         <td>${money(item.planned)}</td>
@@ -1070,12 +1080,12 @@ function renderBudget() {
         </td>
         <td><span class="status-pill ${status === "near" ? "near" : status === "over" ? "over" : ""}">${statusLabel}</span></td>
         <td>
-          <button class="row-menu-button" data-budget-menu="${item.id}" type="button" aria-label="Opcoes de ${item.category}" title="Mais opcoes">&#8942;</button>
+          <button class="row-menu-button" data-budget-menu="${item.id}" type="button" aria-label="Opções de ${item.category}" title="Mais opções">&#8942;</button>
         </td>
       </tr>`;
     })
     .join("")
-    : '<tr><td colspan="7"><div class="empty-state">Nenhum planejamento cadastrado para este mes.</div></td></tr>';
+    : '<tr><td colspan="7"><div class="empty-state">Nenhum planejamento cadastrado para este mês.</div></td></tr>';
 }
 
 function getExistingTransactionCategories() {
@@ -1139,7 +1149,7 @@ function getDebtPayoffDate(debt) {
 }
 
 function renderAnnual() {
-  const labels = ["Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+  const labels = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
   const shortLabels = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
   const availableYears = [...new Set([
     year,
@@ -1169,7 +1179,7 @@ function renderAnnual() {
   document.querySelector("#annualExpenseTotal").textContent = money(totalExpense);
   document.querySelector("#annualGoalsReached").textContent = reachedGoals;
   document.querySelector("#annualGoalsCaption").textContent = annualEligibleGoals.length
-    ? `${reachedGoals} de ${annualEligibleGoals.length} metas concluidas`
+    ? `${reachedGoals} de ${annualEligibleGoals.length} metas concluídas`
     : "Nenhuma meta cadastrada";
   document.querySelector("#annualFinalBalance").textContent = money(totalIncome - totalExpense);
   document.querySelector("#annualFinalBalance").className = totalIncome - totalExpense < 0 ? "negative" : "positive";
@@ -1192,7 +1202,7 @@ function renderAnnual() {
 function renderAnnualBarChart(monthly) {
   const maxValue = Math.max(1, ...monthly.flatMap((item) => [item.income, item.expense]));
   document.querySelector("#annualBarChart").innerHTML = monthly.map((item) => `
-    <div class="annual-bar-group" title="${item.label}: entradas ${money(item.income)}, saidas ${money(item.expense)}">
+    <div class="annual-bar-group" title="${item.label}: entradas ${money(item.income)}, saídas ${money(item.expense)}">
       <div class="annual-bars">
         <span class="annual-bar" style="height:${Math.max(2, (item.income / maxValue) * 100)}%"></span>
         <span class="annual-bar expense" style="height:${Math.max(2, (item.expense / maxValue) * 100)}%"></span>
@@ -1496,8 +1506,8 @@ document.addEventListener("click", (event) => {
   const budgetActionButton = event.target.closest("[data-budget-action]");
   const bankMenuButton = event.target.closest("[data-bank-menu]");
   const bankActionButton = event.target.closest("[data-bank-action]");
-  if (tabButton) switchTab(tabButton.dataset.tab);
-  if (jumpButton) switchTab(jumpButton.dataset.jump);
+  if (tabButton) { switchTab(tabButton.dataset.tab); closeMobileSidebar(); }
+  if (jumpButton) { switchTab(jumpButton.dataset.jump); closeMobileSidebar(); }
   if (bankMenuButton) {
     event.stopPropagation();
     closeRowActionMenu();
@@ -1766,6 +1776,19 @@ document.querySelector("#sidebarToggle").addEventListener("click", () => {
 
 window.addEventListener("resize", applySidebarState);
 
+function openMobileSidebar() {
+  document.querySelector(".sidebar").classList.add("sidebar-open");
+  document.querySelector("#sidebarOverlay").classList.add("is-visible");
+}
+
+function closeMobileSidebar() {
+  document.querySelector(".sidebar").classList.remove("sidebar-open");
+  document.querySelector("#sidebarOverlay").classList.remove("is-visible");
+}
+
+document.querySelector("#hamburgerBtn").addEventListener("click", openMobileSidebar);
+document.querySelector("#sidebarOverlay").addEventListener("click", closeMobileSidebar);
+
 document.querySelector("#goalMovementForm").addEventListener("submit", (event) => {
   event.preventDefault();
   const form = event.currentTarget;
@@ -1922,10 +1945,10 @@ function updateInstallmentFields() {
   countInput.disabled = !showInstallmentCount;
   const preview = document.querySelector("#installmentPreview");
   preview.textContent = recurring
-    ? `O valor de ${money(amount)} sera repetido mensalmente por 12 meses.`
+    ? `O valor de ${money(amount)} será repetido mensalmente por 12 meses.`
     : installment
-    ? `${count} parcelas de aproximadamente ${money(amount / count)} serao criadas nos meses seguintes.`
-    : "Um unico lancamento sera criado.";
+    ? `${count} parcelas de aproximadamente ${money(amount / count)} serão criadas nos meses seguintes.`
+    : "Um único lançamento será criado.";
 }
 
 function updateThirdPartyFields(select, nameSelect) {

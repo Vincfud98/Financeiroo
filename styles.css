@@ -126,12 +126,17 @@ button {
   white-space: nowrap;
 }
 
-.tab-btn::before {
-  content: attr(data-icon);
+.tab-icon {
   display: grid;
   place-items: center;
   width: 24px;
+  flex-shrink: 0;
   color: var(--petrol);
+  font-style: normal;
+}
+
+.tab-icon svg {
+  display: block;
 }
 
 .tab-btn.is-active {
@@ -151,6 +156,33 @@ button {
   gap: 20px;
   align-items: center;
   margin-bottom: 24px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hamburger-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--soft-gray);
+  color: var(--graphite);
+  padding: 0;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 90;
 }
 
 .eyebrow {
@@ -258,6 +290,11 @@ body.dark-mode .primary-btn,
 body.dark-mode .brand-mark {
   color: #10201b;
   background: #8bc7b5;
+}
+
+body.dark-mode .hamburger-btn {
+  background-color: var(--panel);
+  color: var(--graphite);
 }
 
 body.dark-mode .ghost-btn,
@@ -807,7 +844,7 @@ body.dark-mode .budget-row-over {
   padding-inline: 0;
 }
 
-.app-shell.sidebar-is-collapsed .tab-btn::before {
+.app-shell.sidebar-is-collapsed .tab-icon {
   width: 32px;
 }
 
@@ -2557,9 +2594,29 @@ tbody tr:hover {
   }
 
   .sidebar {
-    position: static;
-    height: auto;
-    padding-bottom: 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 250ms ease;
+    background: var(--panel);
+    box-shadow: var(--shadow);
+    overflow-y: auto;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.is-visible {
+    display: block;
+  }
+
+  .hamburger-btn {
+    display: flex;
   }
 
   .sidebar-toggle {
@@ -2567,7 +2624,7 @@ tbody tr:hover {
   }
 
   .tabs {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 
   .summary-grid,
