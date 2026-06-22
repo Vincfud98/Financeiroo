@@ -335,6 +335,16 @@ body.dark-mode .dashboard-alert-item {
   background: #222a27;
 }
 
+body.dark-mode .dashboard-alert-item.danger {
+  background: #3a2222;
+  border-left-color: #c44;
+}
+
+body.dark-mode .filter-clear-btn {
+  color: var(--muted);
+  border-color: var(--muted);
+}
+
 body.dark-mode .wishlist-image {
   background: #252d2a;
 }
@@ -446,6 +456,7 @@ body.dark-mode .budget-row-over {
   grid-template-columns: minmax(0, 1.25fr) minmax(420px, 0.9fr);
   grid-template-areas:
     "flow pies"
+    "patrimony patrimony"
     "summary categories"
     "goals alerts";
   gap: 16px;
@@ -465,6 +476,10 @@ body.dark-mode .budget-row-over {
 
 .dashboard-summary {
   grid-area: summary;
+}
+
+.dashboard-patrimony {
+  grid-area: patrimony;
 }
 
 .dashboard-categories {
@@ -752,6 +767,16 @@ body.dark-mode .budget-row-over {
 
 .dashboard-alert-item.warn {
   background: var(--red-soft);
+}
+
+.dashboard-alert-item.danger {
+  background: #fce4e4;
+  border-left: 3px solid var(--red);
+}
+
+.dashboard-alert-item.danger .alert-icon {
+  color: #fff;
+  background: var(--red);
 }
 
 .alert-icon {
@@ -1371,6 +1396,14 @@ body.dark-mode .budget-row-over {
   font-size: 1.45rem;
 }
 
+.transaction-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 0 4px;
+}
+
 .transaction-filter {
   display: inline-flex;
   align-items: center;
@@ -1386,22 +1419,58 @@ body.dark-mode .budget-row-over {
   cursor: pointer;
 }
 
-.transaction-filter::before {
+.transaction-filter input[type="date"] {
+  position: relative;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  padding: 0;
+  cursor: pointer;
+  width: 110px;
+}
+
+.filter-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border: 1px dashed var(--muted);
+  border-radius: 8px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-clear-btn:hover {
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.transaction-filter:has(select)::before {
   content: "\25BE";
   margin-right: 7px;
   font-size: 0.7rem;
 }
 
-.transaction-filter:focus-within {
+.transaction-filter:has(select):focus-within {
   color: #fff;
   background: var(--green);
   border-color: var(--green);
 }
 
-.transaction-filter.is-filtered {
+.transaction-filter.is-filtered:has(select) {
   color: #fff;
   background: var(--petrol);
   border-color: var(--petrol);
+}
+
+.transaction-filter.is-filtered:has(input) {
+  border-color: var(--petrol);
+  color: var(--petrol);
 }
 
 .transaction-filter > span {
@@ -2638,6 +2707,7 @@ tbody tr:hover {
     grid-template-areas:
       "flow"
       "pies"
+      "patrimony"
       "summary"
       "categories"
       "goals"

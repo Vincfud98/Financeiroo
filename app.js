@@ -105,6 +105,9 @@ const sampleData = {
 let data = loadData();
 let activeTransactionMonth = `${year}-${month}`;
 let selectedTransactionCategory = "all";
+let selectedTransactionPayment = "all";
+let selectedTransactionDateFrom = "";
+let selectedTransactionDateTo = "";
 let selectedBankMonth = `${year}-${month}`;
 let selectedPlanningMonth = `${year}-${month}`;
 let selectedAnnualYear = year;
@@ -458,6 +461,7 @@ function renderDashboard() {
   renderCategoryTable(expenses);
   renderDashboardGoals();
   renderDashboardAlerts(forecast, monthDate);
+  renderDashboardPatrimony();
 }
 
 function monthKeyOffset(monthKey, offset) {
@@ -634,6 +638,13 @@ function renderDashboardGoals() {
     : '<div class="empty-state">Nenhuma meta cadastrada.</div>';
 }
 
+function daysUntil(dateStr) {
+  const target = new Date(`${dateStr}T12:00:00`);
+  const now = new Date();
+  now.setHours(12, 0, 0, 0);
+  return Math.round((target - now) / 86400000);
+}
+
 function renderDashboardAlerts(forecast, monthDate) {
   const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0, 23, 59, 59);
   const pendingDebts = data.debts.filter((debt) =>
@@ -643,40 +654,68 @@ function renderDashboardAlerts(forecast, monthDate) {
   const pendingTransactions = selectedMonthRows().filter((item) => isCountableExpense(item) && item.status === "pending");
   const incompleteGoals = data.goals.filter((goal) => Number(goal.target) > 0 && goal.saved < goal.target);
   const alerts = [];
+
+  // Notificações de contas a vencer (dueDate)
+  const dueSoonTransactions = data.transactions
+    .filter((item) => item.dueDate && item.status === "pending")
+    .map((item) => ({ ...item, daysLeft: daysUntil(item.dueDate) }))
+    .filter((item) => item.daysLeft <= 7)
+    .sort((a, b) => a.daysLeft - b.daysLeft);
+
+  dueSoonTransactions.forEach((item) => {
+    const urgency = item.daysLeft < 0 ? "danger" : item.daysLeft <= 2 ? "danger" : "warn";
+    const label = item.daysLeft < 0
+      ? `Vencida há ${Math.abs(item.daysLeft)} dia(s)`
+      : item.daysLeft === 0 ? "Vence hoje"
+      : item.daysLeft === 1 ? "Vence amanhã"
+      : `Vence em ${item.daysLeft} dias`;
+    alerts.push({
+      title: label,
+      detail: `${item.description}: ${money(item.amount)} — ${dateBR(item.dueDate)}.`,
+      urgency,
+    });
+  });
+
   ["Assai", "Inter", "Nubank"].forEach((bankName) => {
     const summary = getBankSummary(bankName, selectedMonthKey);
     const cycle = getBankCycleDates(bankName, selectedMonthKey);
     const invoiceClosed = new Date(`${cycle.closingDate}T23:59:59`) <= today;
     if (summary.expense > 0 && invoiceClosed && getBankInvoiceStatus(bankName, selectedMonthKey) === "pending") {
+      const daysLeft = daysUntil(cycle.dueDate);
+      const urgency = daysLeft <= 2 ? "danger" : "warn";
       alerts.push({
         title: `Fatura ${bankName} pendente`,
         detail: `${money(summary.expense)} com vencimento em ${dateBR(cycle.dueDate)}.`,
+        urgency,
       });
     }
   });
-  pendingTransactions.slice(0, 3).forEach((item) => alerts.push({
+  pendingTransactions.filter((item) => !item.dueDate).slice(0, 3).forEach((item) => alerts.push({
     title: "Conta pendente",
     detail: `${item.description}: ${money(item.amount)} vence em ${dateBR(item.date)}.`,
+    urgency: "warn",
   }));
   pendingDebts.forEach((debt) => alerts.push({
     title: "Conta pendente",
     detail: `${debt.name}: ${money(debt.total - getDebtPaidAmount(debt))} em aberto.`,
+    urgency: "warn",
   }));
   if (forecast < 0) {
-    alerts.push({ title: "Saldo negativo previsto", detail: `O mês pode fechar em ${money(forecast)}.` });
+    alerts.push({ title: "Saldo negativo previsto", detail: `O mês pode fechar em ${money(forecast)}.`, urgency: "danger" });
   }
   incompleteGoals.slice(0, 2).forEach((goal) => alerts.push({
     title: "Meta não atingida",
     detail: `${goal.name} está em ${Math.round((goal.saved / goal.target) * 100)}%.`,
+    urgency: "warn",
   }));
   document.querySelector("#alertCount").textContent = alerts.length;
   document.querySelector("#dashboardAlerts").innerHTML = alerts.length
     ? alerts.map((alert) => `
-      <div class="dashboard-alert-item warn">
-        <span class="alert-icon">!</span>
+      <div class="dashboard-alert-item ${alert.urgency || "warn"}">
+        <span class="alert-icon">${alert.urgency === "danger" ? "!!" : "!"}</span>
         <div><strong>${alert.title}</strong><span>${alert.detail}</span></div>
       </div>`).join("")
-    : '<div class="empty-state">Tudo em ordem para este periodo.</div>';
+    : '<div class="empty-state">Tudo em ordem para este período.</div>';
 }
 
 function renderTransactions() {
@@ -720,20 +759,52 @@ function renderTransactions() {
   });
 }
 
-function renderTransactionCategoryFilter() {
-  const label = selectedTransactionCategory === "all"
-    ? "Filtro"
-    : `Filtro: ${selectedTransactionCategory}`;
+function renderTransactionFilters() {
+  const payments = ["Pix", "Assaí", "Inter", "Nubank", "Débito Vinicius", "Débito Carol"];
+  const hasActiveFilter = selectedTransactionCategory !== "all" || selectedTransactionPayment !== "all" || selectedTransactionDateFrom || selectedTransactionDateTo;
 
-  return `<label class="transaction-filter ${selectedTransactionCategory === "all" ? "" : "is-filtered"}">
-    <span>${label}</span>
-    <select id="transactionCategoryFilter" aria-label="Filtrar lançamentos por categoria">
-      <option value="all">Todas as categorias</option>
-      ${financialCategories.map((category) => `
-        <option value="${category}" ${category === selectedTransactionCategory ? "selected" : ""}>${category}</option>
-      `).join("")}
-    </select>
-  </label>`;
+  return `<div class="transaction-filters">
+    <label class="transaction-filter ${selectedTransactionCategory !== "all" ? "is-filtered" : ""}">
+      <span>Categoria</span>
+      <select id="transactionCategoryFilter">
+        <option value="all">Todas</option>
+        ${financialCategories.map((c) => `<option value="${c}" ${c === selectedTransactionCategory ? "selected" : ""}>${c}</option>`).join("")}
+      </select>
+    </label>
+    <label class="transaction-filter ${selectedTransactionPayment !== "all" ? "is-filtered" : ""}">
+      <span>Pagamento</span>
+      <select id="transactionPaymentFilter">
+        <option value="all">Todos</option>
+        ${payments.map((p) => `<option value="${p}" ${p === selectedTransactionPayment ? "selected" : ""}>${p}</option>`).join("")}
+      </select>
+    </label>
+    <label class="transaction-filter ${selectedTransactionDateFrom ? "is-filtered" : ""}">
+      <span>De</span>
+      <input type="date" id="transactionDateFrom" value="${selectedTransactionDateFrom}" />
+    </label>
+    <label class="transaction-filter ${selectedTransactionDateTo ? "is-filtered" : ""}">
+      <span>Até</span>
+      <input type="date" id="transactionDateTo" value="${selectedTransactionDateTo}" />
+    </label>
+    ${hasActiveFilter ? '<button class="filter-clear-btn" id="clearTransactionFilters" type="button">Limpar filtros</button>' : ""}
+  </div>`;
+}
+
+function applyTransactionFilters(rows) {
+  let filtered = rows;
+  if (selectedTransactionCategory !== "all") {
+    filtered = filtered.filter((item) => transactionMatchesBudgetCategory(item.category, selectedTransactionCategory));
+  }
+  if (selectedTransactionPayment !== "all") {
+    filtered = filtered.filter((item) => item.payment === selectedTransactionPayment);
+  }
+  if (selectedTransactionDateFrom) {
+    filtered = filtered.filter((item) => item.date >= selectedTransactionDateFrom);
+  }
+  if (selectedTransactionDateTo) {
+    filtered = filtered.filter((item) => item.date <= selectedTransactionDateTo);
+  }
+  return filtered;
 }
 
 function renderTransactionMonthTab(monthKey, rows) {
@@ -748,9 +819,7 @@ function renderTransactionMonthTab(monthKey, rows) {
 }
 
 function renderMonthlyTransactionTable(monthKey, rows) {
-  const visibleRows = selectedTransactionCategory === "all"
-    ? rows
-    : rows.filter((item) => transactionMatchesBudgetCategory(item.category, selectedTransactionCategory));
+  const visibleRows = applyTransactionFilters(rows);
   const monthDate = new Date(`${monthKey}-01T12:00:00`);
   const monthLabel = monthDate.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
   const income = sum(visibleRows, (item) => item.type === "income");
@@ -767,9 +836,9 @@ function renderMonthlyTransactionTable(monthKey, rows) {
         <span class="month-total income">Entradas: ${money(income)}</span>
         <span class="month-total expense">Saídas: ${money(expense)}</span>
         <span class="month-total pending">${pending} ${pending === 1 ? "pendente" : "pendentes"}</span>
-        ${renderTransactionCategoryFilter()}
       </div>
     </div>
+    ${renderTransactionFilters()}
     <div class="table-wrap">
       <table class="finance-table">
         <thead>
@@ -1234,7 +1303,7 @@ function renderAnnualLineChart(monthly) {
   const zeroY = paddingY + ((maxValue - 0) / range) * (height - paddingY * 2);
 
   document.querySelector("#annualLineChart").innerHTML = `
-    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Evolucao do saldo acumulado">
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Evolução do saldo acumulado">
       <line class="grid-line" x1="${paddingX}" y1="${paddingY}" x2="${paddingX}" y2="${height - paddingY}"></line>
       <line class="grid-line" x1="${paddingX}" y1="${height - paddingY}" x2="${width - paddingX}" y2="${height - paddingY}"></line>
       <line class="grid-line" x1="${paddingX}" y1="${zeroY}" x2="${width - paddingX}" y2="${zeroY}"></line>
@@ -1245,6 +1314,60 @@ function renderAnnualLineChart(monthly) {
           <title>${point.label}: ${money(point.value)}</title>
         </circle>
         <text x="${point.x}" y="${height - 5}" text-anchor="middle">${point.label}</text>
+      `).join("")}
+    </svg>`;
+}
+
+function renderDashboardPatrimony() {
+  const shortLabels = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const currentYear = Number(selectedMonthKey.split("-")[0]);
+  const monthly = shortLabels.map((label, index) => {
+    const key = `${currentYear}-${String(index + 1).padStart(2, "0")}`;
+    const rows = data.transactions.filter((item) => item.date.startsWith(key));
+    const income = sum(rows, (item) => item.type === "income");
+    const expense = sum(rows, isCountableExpense);
+    return { label, income, expense, result: income - expense };
+  });
+
+  let accumulated = 0;
+  const values = monthly.map((item) => {
+    accumulated += item.result;
+    return accumulated;
+  });
+
+  const finalBalance = values[values.length - 1] || 0;
+  const balanceEl = document.querySelector("#dashboardPatrimonyBalance");
+  balanceEl.textContent = money(finalBalance);
+  balanceEl.className = finalBalance < 0 ? "negative" : "positive";
+
+  const width = 640;
+  const height = 200;
+  const paddingX = 28;
+  const paddingY = 20;
+  const minValue = Math.min(0, ...values);
+  const maxValue = Math.max(0, ...values);
+  const range = Math.max(1, maxValue - minValue);
+  const points = values.map((value, index) => {
+    const x = paddingX + (index * (width - paddingX * 2)) / 11;
+    const y = paddingY + ((maxValue - value) / range) * (height - paddingY * 2);
+    return { x, y, value, label: monthly[index].label };
+  });
+  const pointString = points.map((p) => `${p.x},${p.y}`).join(" ");
+  const areaPoints = `${paddingX},${height - paddingY} ${pointString} ${width - paddingX},${height - paddingY}`;
+  const zeroY = paddingY + ((maxValue - 0) / range) * (height - paddingY * 2);
+
+  document.querySelector("#dashboardPatrimonyChart").innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Evolução do saldo acumulado">
+      <line class="grid-line" x1="${paddingX}" y1="${paddingY}" x2="${paddingX}" y2="${height - paddingY}"></line>
+      <line class="grid-line" x1="${paddingX}" y1="${height - paddingY}" x2="${width - paddingX}" y2="${height - paddingY}"></line>
+      <line class="grid-line" x1="${paddingX}" y1="${zeroY}" x2="${width - paddingX}" y2="${zeroY}"></line>
+      <polygon class="balance-area" points="${areaPoints}"></polygon>
+      <polyline class="balance-line" points="${pointString}"></polyline>
+      ${points.map((p) => `
+        <circle class="balance-point" cx="${p.x}" cy="${p.y}" r="4">
+          <title>${p.label}: ${money(p.value)}</title>
+        </circle>
+        <text x="${p.x}" y="${height - 3}" text-anchor="middle">${p.label}</text>
       `).join("")}
     </svg>`;
 }
@@ -1506,6 +1629,14 @@ document.addEventListener("click", (event) => {
   const budgetActionButton = event.target.closest("[data-budget-action]");
   const bankMenuButton = event.target.closest("[data-bank-menu]");
   const bankActionButton = event.target.closest("[data-bank-action]");
+  if (event.target.matches("#clearTransactionFilters")) {
+    selectedTransactionCategory = "all";
+    selectedTransactionPayment = "all";
+    selectedTransactionDateFrom = "";
+    selectedTransactionDateTo = "";
+    renderTransactions();
+    return;
+  }
   if (tabButton) { switchTab(tabButton.dataset.tab); closeMobileSidebar(); }
   if (jumpButton) { switchTab(jumpButton.dataset.jump); closeMobileSidebar(); }
   if (bankMenuButton) {
@@ -1997,6 +2128,21 @@ document.querySelector("#editThirdPartySelect").addEventListener("change", () =>
 document.addEventListener("change", (event) => {
   if (event.target.matches("#transactionCategoryFilter")) {
     selectedTransactionCategory = event.target.value;
+    renderTransactions();
+    return;
+  }
+  if (event.target.matches("#transactionPaymentFilter")) {
+    selectedTransactionPayment = event.target.value;
+    renderTransactions();
+    return;
+  }
+  if (event.target.matches("#transactionDateFrom")) {
+    selectedTransactionDateFrom = event.target.value;
+    renderTransactions();
+    return;
+  }
+  if (event.target.matches("#transactionDateTo")) {
+    selectedTransactionDateTo = event.target.value;
     renderTransactions();
     return;
   }
