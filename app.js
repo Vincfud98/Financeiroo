@@ -649,23 +649,19 @@ function renderTransactions() {
 }
 
 function renderTransactionCategoryFilter() {
-  return `<details class="transaction-filter">
-    <summary class="${selectedTransactionCategory === "all" ? "" : "is-filtered"}">Filtro</summary>
-    <div class="transaction-filter-panel">
-      <label>
-        <span>Categoria</span>
-        <select id="transactionCategoryFilter">
-          <option value="all">Todas as categorias</option>
-          ${financialCategories.map((category) => `
-            <option value="${category}" ${category === selectedTransactionCategory ? "selected" : ""}>${category}</option>
-          `).join("")}
-        </select>
-      </label>
-      <button class="ghost-btn" type="button" data-clear-transaction-filter ${selectedTransactionCategory === "all" ? "disabled" : ""}>
-        Limpar filtro
-      </button>
-    </div>
-  </details>`;
+  const label = selectedTransactionCategory === "all"
+    ? "Filtro"
+    : `Filtro: ${selectedTransactionCategory}`;
+
+  return `<label class="transaction-filter ${selectedTransactionCategory === "all" ? "" : "is-filtered"}">
+    <span>${label}</span>
+    <select id="transactionCategoryFilter" aria-label="Filtrar lancamentos por categoria">
+      <option value="all">Todas as categorias</option>
+      ${financialCategories.map((category) => `
+        <option value="${category}" ${category === selectedTransactionCategory ? "selected" : ""}>${category}</option>
+      `).join("")}
+    </select>
+  </label>`;
 }
 
 function renderTransactionMonthTab(monthKey, rows) {
@@ -1373,14 +1369,8 @@ document.addEventListener("click", (event) => {
   const goalActionButton = event.target.closest("[data-goal-action]");
   const budgetMenuButton = event.target.closest("[data-budget-menu]");
   const budgetActionButton = event.target.closest("[data-budget-action]");
-  const clearTransactionFilterButton = event.target.closest("[data-clear-transaction-filter]");
   if (tabButton) switchTab(tabButton.dataset.tab);
   if (jumpButton) switchTab(jumpButton.dataset.jump);
-  if (clearTransactionFilterButton) {
-    selectedTransactionCategory = "all";
-    renderTransactions();
-    return;
-  }
   if (rowMenuButton) {
     event.stopPropagation();
     openRowActionMenu(rowMenuButton);
